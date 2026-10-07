@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Editar presupuesto · Motos Boris{% endblock %}
+{% block content %}
+<section class="admin-head"><p class="eyebrow">CATÁLOGO DEL TALLER</p><h1>Editar <em>presupuesto.</em></h1><p class="intro">Modifica los datos y guarda el nuevo importe.</p></section>
+<section class="edit-panel">
+  <form class="price-form" method="post">
+    <div class="panel-heading"><span class="step">↗</span><div><p class="eyebrow">EDICIÓN</p><h2>{{ price.brand }} · {{ price.model }}</h2></div></div>
+    {% if error %}<p class="form-message error">{{ error }}</p>{% endif %}
+    <label>Marca<input name="brand" list="brand-options" value="{{ price.brand }}" required></label>
+    <datalist id="brand-options">{% for brand in brands %}<option value="{{ brand.name }}">{% endfor %}</datalist>
+    <label>Modelo<input name="model" value="{{ price.model }}" required></label>
+    <label>Tipo de servicio<input name="service" value="{{ price.service }}" required></label>
+    <label>Precio <span class="muted">(ARS)</span><input name="price" type="number" min="0" step="1" value="{{ price.price_cents }}" required></label>
+    <button type="submit">Guardar cambios <span>→</span></button>
+    <a class="back-link" href="{{ url_for('admin') }}">← Volver al catálogo</a>
+  </form>
+</section>
+{% endblock %}

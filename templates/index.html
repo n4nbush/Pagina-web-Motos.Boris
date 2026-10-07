@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Presupuesto · Motos Boris{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">TALLER · SERVICIO · CONFIANZA</p>
+  <h1>Presupuesto para<br><em>tu moto.</em></h1>
+  <p class="intro">Selecciona tu moto y el servicio que necesitas para conocer el precio al instante.</p>
+</section>
+<section class="quote-panel" aria-labelledby="quote-title">
+  <div class="panel-heading"><span class="step">01</span><div><p class="eyebrow">CONSULTA RÁPIDA</p><h2 id="quote-title">Encuentra tu servicio</h2></div></div>
+  <div class="field-stack">
+    <label>Marca<select id="brand-select"><option value="">Selecciona una marca</option>{% for brand in brands %}<option value="{{ brand.id }}">{{ brand.name }}</option>{% endfor %}</select></label>
+    <label>Modelo<select id="model-select" disabled><option value="">Primero selecciona una marca</option></select></label>
+    <label>Tipo de servicio<select id="service-select" disabled><option value="">Primero selecciona un modelo</option></select></label>
+  </div>
+  <div class="price-result" id="price-result" hidden>
+    <p class="eyebrow">PRECIO DEL SERVICIO</p><strong id="price-value"></strong><p id="price-label"></p>
+    <a class="whatsapp-button" id="whatsapp-button" href="#" target="_blank" rel="noopener" aria-disabled="true">Consultar por WhatsApp <span>↗</span></a>
+  </div>
+  <div class="service-placeholder" id="empty-message"><span>02</span><p>Los servicios y precios aparecerán aquí cuando selecciones tu moto.</p></div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='app.js') }}"></script>{% endblock %}
