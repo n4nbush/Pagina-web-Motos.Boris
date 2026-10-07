@@ -8,10 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='brand.css') }}">
+  {% block head %}{% endblock %}
 </head>
 <body>
   <header class="topbar">
-    <a class="brand-mark" href="{{ url_for('index') }}"><span>M</span> MOTOS BORIS</a>
+    <a class="brand-mark" href="{{ url_for('index') }}"><img class="brand-logo" src="{{ url_for('static', filename='motos-boris-logo.png') }}" alt="Motos Boris"><span class="brand-name">MOTOS BORIS</span></a>
     <nav><a href="{{ url_for('index') }}">Presupuestos</a>{% if session.get('admin_authenticated') %}<a href="{{ url_for('admin') }}">Panel privado</a><a href="{{ url_for('logout') }}">Salir</a>{% endif %}</nav>
   </header>
   <main>{% block content %}{% endblock %}</main>

@@ -3,17 +3,24 @@ import sqlite3
 from functools import wraps
 from pathlib import Path
 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 
 
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE = BASE_DIR / "motos_boris.sqlite3"
+load_dotenv(BASE_DIR / ".env")
+
+secret_key = os.environ.get("SECRET_KEY")
+admin_password = os.environ.get("ADMIN_PASSWORD")
+if not secret_key or not admin_password:
+    raise RuntimeError("Configura SECRET_KEY y ADMIN_PASSWORD en el archivo .env o en el entorno.")
 
 app = Flask(__name__)
 app.config["DATABASE"] = DATABASE
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "cambia-esta-clave-en-produccion")
+app.config["SECRET_KEY"] = secret_key
 app.config["ADMIN_USERNAME"] = os.environ.get("ADMIN_USERNAME", "admin")
-app.config["ADMIN_PASSWORD"] = os.environ.get("ADMIN_PASSWORD", "motosboris")
+app.config["ADMIN_PASSWORD"] = admin_password
 app.config["WHATSAPP_NUMBER"] = os.environ.get("WHATSAPP_NUMBER", "")
 
 

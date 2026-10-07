@@ -1,0 +1,7 @@
+:root{--bg:#292e31;--surface:#32383b;--surface-2:#3b4245;--text:#f5f5f2;--muted:#b2b8b7;--line:#50585a;--accent:#f47729;--accent-soft:#683a24}
+body:before{background-image:radial-gradient(#687174 .7px,transparent .7px)}
+.brand-mark{display:flex;align-items:center;gap:10px;letter-spacing:1.4px}
+.brand-logo{width:46px;height:46px;display:block;object-fit:cover;border-radius:50%}
+.brand-name{font-weight:700}
+button,.whatsapp-button{background:var(--accent)}
+@media(max-width:520px){.brand-name{display:none}.topbar{padding-left:16px;padding-right:16px}nav{gap:12px}}

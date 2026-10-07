@@ -6,7 +6,7 @@ const emptyMessage = document.querySelector('#empty-message');
 const priceValue = document.querySelector('#price-value');
 const priceLabel = document.querySelector('#price-label');
 const whatsappButton = document.querySelector('#whatsapp-button');
-const whatsappNumber = '';
+const whatsappNumber = '5491178310481';
 
 const pesos = (cents) => `$ ${Number(cents).toLocaleString('es-AR')}`;
 
@@ -61,9 +61,10 @@ if (brandSelect && modelSelect) {
     priceLabel.textContent = option.dataset.name;
     priceResult.hidden = false;
     emptyMessage.hidden = true;
-    if (whatsappNumber) {
-      whatsappButton.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hola, quisiera consultar por ${option.dataset.name}.`)}`;
-      whatsappButton.removeAttribute('aria-disabled');
-    }
+    const brand = brandSelect.selectedOptions[0]?.textContent.trim();
+    const model = modelSelect.selectedOptions[0]?.textContent.trim();
+    const message = `Hola, quisiera consultar por mi ${brand} ${model}. Me interesa el servicio de ${option.dataset.name}.`;
+    whatsappButton.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    whatsappButton.removeAttribute('aria-disabled');
   });
 }

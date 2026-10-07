@@ -1,23 +1,37 @@
 {% extends "base.html" %}
-{% block title %}Cargar precios · Motos Boris{% endblock %}
+{% block title %}Panel privado · Motos Boris{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">{% endblock %}
 {% block content %}
 <section class="admin-head"><p class="eyebrow">CATÁLOGO DEL TALLER</p><h1>Gestionar <em>precios.</em></h1><p class="intro">Añade, modifica, elimina o actualiza los importes de tus servicios.</p></section>
-<section class="admin-layout">
-  <form class="price-form" method="post">
-    <div class="panel-heading"><span class="step">01</span><div><p class="eyebrow">NUEVO REGISTRO</p><h2>Datos del servicio</h2></div></div>
+<section class="admin-sections">
+  <section class="admin-panel data-entry">
+    <div class="panel-heading"><span class="step">01</span><div><p class="eyebrow">CARGA DE DATOS</p><h2>Nuevo precio</h2></div></div>
     {% if error %}<p class="form-message error">{{ error }}</p>{% endif %}
-    <label>Marca<input name="brand" list="brand-options" placeholder="Ej. Honda" required></label>
-    <datalist id="brand-options">{% for brand in brands %}<option value="{{ brand.name }}">{% endfor %}</datalist>
-    <label>Modelo<input name="model" placeholder="Ej. CB 500 F" required></label>
-    <label>Tipo de servicio<input name="service" placeholder="Ej. Cambio de aceite" required></label>
-    <label>Precio <span class="muted">(ARS)</span><input name="price" type="number" min="0" step="1" placeholder="0" required></label>
-    <button type="submit">Guardar precio <span>→</span></button>
+    <form class="price-form" method="post">
+      <label>Marca<input name="brand" list="brand-options" placeholder="Ej. Honda" required></label>
+      <datalist id="brand-options">{% for brand in brands %}<option value="{{ brand.name }}">{% endfor %}</datalist>
+      <label>Modelo<input name="model" placeholder="Ej. CB 500 F" required></label>
+      <label>Tipo de servicio<input name="service" placeholder="Ej. Cambio de aceite" required></label>
+      <label>Precio <span class="muted">(ARS)</span><input name="price" type="number" min="0" step="1" placeholder="0" required></label>
+      <button type="submit">Guardar precio <span>→</span></button>
+    </form>
     {% if request.args.get('saved') %}<p class="form-message success">Precio guardado correctamente.</p>{% endif %}
-  </form>
-  <div class="catalog"><div class="panel-heading"><span class="step">02</span><div><p class="eyebrow">REGISTROS GUARDADOS</p><h2>Catálogo actual</h2></div></div>
-    {% if prices %}<div class="price-list">{% for item in prices %}<div class="price-row"><div><strong>{{ item.brand }} · {{ item.model }}</strong><span>{{ item.service }}</span></div><div class="price-actions"><b>{{ item.price_cents|pesos }}</b><a href="{{ url_for('edit_price', price_id=item.id) }}" title="Editar presupuesto">Editar</a><form method="post" action="{{ url_for('delete_price', price_id=item.id) }}" onsubmit="return confirm('¿Eliminar este presupuesto?')"><button class="delete-button" type="submit" title="Eliminar presupuesto">Borrar</button></form></div></div>{% endfor %}</div>{% else %}<div class="empty-state">Todavía no hay precios cargados.<br>El primer registro aparecerá aquí.</div>{% endif %}
     {% if prices %}<form class="increase-form" method="post" action="{{ url_for('increase_prices') }}"><label>Subir todos los precios <span class="muted">(porcentaje)</span><div class="increase-controls"><input name="percentage" type="number" min="0" max="10000" step="0.1" placeholder="Ej. 10" required><button type="submit">Aplicar aumento <span>↗</span></button></div></label></form>{% endif %}
+  </section>
+  <section class="admin-panel catalog-panel">
+    <div class="panel-heading"><span class="step">02</span><div><p class="eyebrow">REGISTROS GUARDADOS</p><h2>Catálogo actual</h2></div></div>
+    {% if prices %}
+    <div class="catalog-filters" role="search">
+      <label class="search-field">Buscar<input id="price-search" type="search" placeholder="Marca, modelo o servicio"></label>
+      <label>Marca<select id="brand-filter"><option value="">Todas las marcas</option>{% for brand in brands %}<option value="{{ brand.name }}">{{ brand.name }}</option>{% endfor %}</select></label>
+      <label>Servicio<select id="service-filter"><option value="">Todos los servicios</option>{% for service in prices|map(attribute='service')|unique|sort %}<option value="{{ service }}">{{ service }}</option>{% endfor %}</select></label>
+    </div>
+    <p class="catalog-count" id="catalog-count">{{ prices|length }} registros</p>
+    <div class="price-grid" id="price-grid">{% for item in prices %}<article class="price-card" data-search="{{ (item.brand ~ ' ' ~ item.model ~ ' ' ~ item.service)|lower }}" data-brand="{{ item.brand }}" data-service="{{ item.service }}"><div><span class="price-card-brand">{{ item.brand }}</span><h3>{{ item.model }}</h3><p>{{ item.service }}</p></div><div class="price-card-footer"><b>{{ item.price_cents|pesos }}</b><div class="price-actions"><a href="{{ url_for('edit_price', price_id=item.id) }}" title="Editar presupuesto">Editar</a><form method="post" action="{{ url_for('delete_price', price_id=item.id) }}" onsubmit="return confirm('¿Eliminar este presupuesto?')"><button class="delete-button" type="submit" title="Eliminar presupuesto">Borrar</button></form></div></div></article>{% endfor %}</div>
+    <p class="empty-state filtered-empty" id="filtered-empty" hidden>No hay registros que coincidan con esos filtros.</p>
+    {% else %}<div class="empty-state">Todavía no hay precios cargados.<br>El primer registro aparecerá aquí.</div>{% endif %}
     {% if request.args.get('updated') %}<p class="form-message success">Presupuesto actualizado correctamente.</p>{% endif %}{% if request.args.get('deleted') %}<p class="form-message success">Presupuesto eliminado correctamente.</p>{% endif %}{% if request.args.get('increased') %}<p class="form-message success">Precios aumentados un {{ request.args.get('increased') }}%.</p>{% endif %}{% if request.args.get('error') %}<p class="form-message error">{{ request.args.get('error') }}</p>{% endif %}
-  </div>
+  </section>
 </section>
 {% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='admin.js') }}"></script>{% endblock %}
