@@ -116,8 +116,8 @@ def login():
     error = None
     if request.method == "POST":
         username = request.form.get("username", "").strip()
-        password = request.form.get("password", "")
-        if username == app.config["ADMIN_USERNAME"] and password == app.config["ADMIN_PASSWORD"]:
+        password = request.form.get("password", "").strip()
+        if username.lower() == app.config["ADMIN_USERNAME"].lower() and password == app.config["ADMIN_PASSWORD"]:
             session["admin_authenticated"] = True
             return redirect(request.args.get("next") or url_for("admin"))
         error = "Usuario o contraseña incorrectos."

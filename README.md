@@ -27,3 +27,5 @@ Desde el panel privado también puedes editar o borrar cada presupuesto y aplica
 	`from app import app as application`
 3. Define el directorio de trabajo del WSGI como la carpeta del proyecto y selecciona `.venv` como entorno virtual.
 4. Recarga la aplicación. La SQLite se generará en el directorio del proyecto al primer arranque.
+
+Si el acceso rechaza `admin / motosboris`, revisa en **Web > Environment variables** que no haya valores antiguos para `ADMIN_USERNAME` o `ADMIN_PASSWORD`. Puedes definirlos explícitamente, por ejemplo `ADMIN_USERNAME=admin` y `ADMIN_PASSWORD=motosboris`, guardar, y pulsar **Reload**. Las variables de PythonAnywhere tienen prioridad sobre los valores por defecto del código.
